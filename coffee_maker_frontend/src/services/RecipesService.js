@@ -13,4 +13,4 @@ export const createRecipe = (recipe) => axios.post(REST_API_BASE_URL, recipe)
 export const getRecipe = (id) => axios.get(REST_API_BASE_URL + "/" + id)
 
 /** DELETE Recipe - deletes the recipe with the given id */
-export const deleteRecipe = (id) => axios.get(REST_API_BASE_URL + "/" + id)
+export const deleteRecipe = (id) => axios.delete(REST_API_BASE_URL + "/" + id)
