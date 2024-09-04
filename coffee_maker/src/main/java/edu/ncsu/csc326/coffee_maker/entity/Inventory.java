@@ -50,24 +50,6 @@ public class Inventory {
 		this.chocolate = chocolate;
 	}
 
-	/**
-     * Use this to create inventory with specified amts.
-     *
-     * @param coffee
-     *            amt of coffee
-     * @param milk
-     *            amt of milk
-     * @param sugar
-     *            amt of sugar
-     * @param chocolate
-     *            amt of chocolate
-     */
-    public Inventory ( final Integer coffee, final Integer milk, final Integer sugar, final Integer chocolate ) {
-        setCoffee( coffee );
-        setMilk( milk );
-        setSugar( sugar );
-        setChocolate( chocolate );
-    }
 
     /**
      * Returns the ID of the entry in the DB
@@ -111,31 +93,6 @@ public class Inventory {
     }
 
     /**
-     * Add the number of chocolate units in the inventory to the current amount
-     * of chocolate units.
-     *
-     * @param chocolate
-     *            amount of chocolate
-     * @return checked amount of chocolate
-     * @throws IllegalArgumentException
-     *             if the parameter isn't a positive integer
-     */
-    public Integer checkChocolate ( final String chocolate ) throws IllegalArgumentException {
-        Integer amtChocolate = 0;
-        try {
-            amtChocolate = Integer.parseInt( chocolate );
-        }
-        catch ( final NumberFormatException e ) {
-            throw new IllegalArgumentException( "Units of chocolate must be a positive integer" );
-        }
-        if ( amtChocolate < 0 ) {
-            throw new IllegalArgumentException( "Units of chocolate must be a positive integer" );
-        }
-
-        return amtChocolate;
-    }
-
-    /**
      * Returns the current number of coffee units in the inventory.
      *
      * @return amount of coffee
@@ -154,31 +111,6 @@ public class Inventory {
         if ( amtCoffee >= 0 ) {
             coffee = amtCoffee;
         }
-    }
-
-    /**
-     * Add the number of coffee units in the inventory to the current amount of
-     * coffee units.
-     *
-     * @param coffee
-     *            amount of coffee
-     * @return checked amount of coffee
-     * @throws IllegalArgumentException
-     *             if the parameter isn't a positive integer
-     */
-    public Integer checkCoffee ( final String coffee ) throws IllegalArgumentException {
-        Integer amtCoffee = 0;
-        try {
-            amtCoffee = Integer.parseInt( coffee );
-        }
-        catch ( final NumberFormatException e ) {
-            throw new IllegalArgumentException( "Units of coffee must be a positive integer" );
-        }
-        if ( amtCoffee < 0 ) {
-            throw new IllegalArgumentException( "Units of coffee must be a positive integer" );
-        }
-
-        return amtCoffee;
     }
 
     /**
@@ -203,31 +135,6 @@ public class Inventory {
     }
 
     /**
-     * Add the number of milk units in the inventory to the current amount of
-     * milk units.
-     *
-     * @param milk
-     *            amount of milk
-     * @return checked amount of milk
-     * @throws IllegalArgumentException
-     *             if the parameter isn't a positive integer
-     */
-    public Integer checkMilk ( final String milk ) throws IllegalArgumentException {
-        Integer amtMilk = 0;
-        try {
-            amtMilk = Integer.parseInt( milk );
-        }
-        catch ( final NumberFormatException e ) {
-            throw new IllegalArgumentException( "Units of milk must be a positive integer" );
-        }
-        if ( amtMilk < 0 ) {
-            throw new IllegalArgumentException( "Units of milk must be a positive integer" );
-        }
-
-        return amtMilk;
-    }
-
-    /**
      * Returns the current number of sugar units in the inventory.
      *
      * @return int
@@ -246,56 +153,6 @@ public class Inventory {
         if ( amtSugar >= 0 ) {
             sugar = amtSugar;
         }
-    }
-
-    /**
-     * Add the number of sugar units in the inventory to the current amount of
-     * sugar units.
-     *
-     * @param sugar
-     *            amount of sugar
-     * @return checked amount of sugar
-     * @throws IllegalArgumentException
-     *             if the parameter isn't a positive integer
-     */
-    public Integer checkSugar ( final String sugar ) throws IllegalArgumentException {
-        Integer amtSugar = 0;
-        try {
-            amtSugar = Integer.parseInt( sugar );
-        }
-        catch ( final NumberFormatException e ) {
-            throw new IllegalArgumentException( "Units of sugar must be a positive integer" );
-        }
-        if ( amtSugar < 0 ) {
-            throw new IllegalArgumentException( "Units of sugar must be a positive integer" );
-        }
-
-        return amtSugar;
-    }
-
-
-
-    /**
-     * Returns a string describing the current contents of the inventory.
-     *
-     * @return String
-     */
-    @Override
-    public String toString () {
-        final StringBuffer buf = new StringBuffer();
-        buf.append( "Coffee: " );
-        buf.append( getCoffee() );
-        buf.append( "\n" );
-        buf.append( "Milk: " );
-        buf.append( getMilk() );
-        buf.append( "\n" );
-        buf.append( "Sugar: " );
-        buf.append( getSugar() );
-        buf.append( "\n" );
-        buf.append( "Chocolate: " );
-        buf.append( getChocolate() );
-        buf.append( "\n" );
-        return buf.toString();
     }
 
 }
