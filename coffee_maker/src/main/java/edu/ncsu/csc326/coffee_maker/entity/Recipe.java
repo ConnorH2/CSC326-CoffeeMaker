@@ -58,15 +58,6 @@ public class Recipe {
     }
 
     /**
-     * Check if all ingredient fields in the recipe are 0
-     *
-     * @return true if all ingredient fields are 0, otherwise return false
-     */
-    public boolean checkRecipe () {
-        return coffee == 0 && milk == 0 && sugar == 0 && chocolate == 0;
-    }
-
-    /**
      * Get the ID of the Recipe
      *
      * @return the ID
@@ -198,61 +189,6 @@ public class Recipe {
      */
     public void setPrice ( final Integer price ) {
         this.price = price;
-    }
-
-    /**
-     * Updates the fields to be equal to the passed Recipe
-     *
-     * @param r
-     *            with updated fields
-     */
-    public void updateRecipe ( final Recipe r ) {
-        setChocolate( r.getChocolate() );
-        setCoffee( r.getCoffee() );
-        setMilk( r.getMilk() );
-        setSugar( r.getSugar() );
-        setPrice( r.getPrice() );
-    }
-
-    /**
-     * Returns the name of the recipe.
-     *
-     * @return String
-     */
-    @Override
-    public String toString () {
-        return name;
-    }
-
-    @Override
-    public int hashCode () {
-        final int prime = 31;
-        Integer result = 1;
-        result = prime * result + ( ( name == null ) ? 0 : name.hashCode() );
-        return result;
-    }
-
-    @Override
-    public boolean equals ( final Object obj ) {
-        if ( this == obj ) {
-            return true;
-        }
-        if ( obj == null ) {
-            return false;
-        }
-        if ( getClass() != obj.getClass() ) {
-            return false;
-        }
-        final Recipe other = (Recipe) obj;
-        if ( name == null ) {
-            if ( other.name != null ) {
-                return false;
-            }
-        }
-        else if ( !name.equals( other.name ) ) {
-            return false;
-        }
-        return true;
     }
 
 }

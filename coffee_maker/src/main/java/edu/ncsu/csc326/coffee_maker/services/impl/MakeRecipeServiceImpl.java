@@ -17,49 +17,49 @@ import edu.ncsu.csc326.coffee_maker.services.MakeRecipeService;
  */
 @Service
 public class MakeRecipeServiceImpl implements MakeRecipeService {
+	
+	/** Connection to the repository to work with the DAO + database */
+	@Autowired
+	private InventoryRepository inventoryRepository;
 
-    /** Connection to the repository to work with the DAO + database */
-    @Autowired
-    private InventoryRepository inventoryRepository;
-
-    /**
+	/**
      * Removes the ingredients used to make the specified recipe. Assumes that
      * the user has checked that there are enough ingredients to make
      *
      * @param inventoryDto
-     *            current inventory
+     * 			  current inventory
      * @param recipeDto
      *            recipe to make
-     * @return updated inventory
+     * @return updated inventory 
      */
-    @Override
-    public boolean makeRecipe ( final InventoryDto inventoryDto, final RecipeDto recipeDto ) {
-        final Inventory inventory = InventoryMapper.mapToInventory( inventoryDto );
-        final Recipe recipe = RecipeMapper.mapToRecipe( recipeDto );
-
-        if ( enoughIngredients( inventory, recipe ) ) {
-            inventory.setCoffee( inventory.getCoffee() - recipe.getCoffee() );
-            inventory.setMilk( inventory.getMilk() - recipe.getMilk() );
-            inventory.setSugar( inventory.getSugar() - recipe.getSugar() );
-            inventory.setChocolate( inventory.getChocolate() - recipe.getChocolate() );
-
-            inventoryRepository.save( inventory );
+	@Override
+	public boolean makeRecipe(InventoryDto inventoryDto, RecipeDto recipeDto) {
+		Inventory inventory = InventoryMapper.mapToInventory(inventoryDto);
+		Recipe recipe = RecipeMapper.mapToRecipe(recipeDto);
+		
+		if ( enoughIngredients( inventory, recipe ) ) {
+			inventory.setCoffee( inventory.getCoffee() - recipe.getCoffee() );
+			inventory.setMilk( inventory.getMilk() - recipe.getMilk() );
+			inventory.setSugar( inventory.getSugar() - recipe.getSugar() );
+			inventory.setChocolate( inventory.getChocolate() - recipe.getChocolate() );
+        
+            inventoryRepository.save(inventory);
             return true;
-        }
-
-        return false;
-    }
-
+		}
+		        
+        return false; 
+	}
+	
     /**
      * Returns true if there are enough ingredients to make the beverage.
      *
      * @param inventory
-     *            coffee maker inventory
+     * 			  coffee maker inventory
      * @param recipe
      *            recipe to check if there are enough ingredients
      * @return true if enough ingredients to make the beverage
      */
-    private boolean enoughIngredients ( final Inventory inventory, final Recipe recipe ) {
+    private boolean enoughIngredients (Inventory inventory, Recipe recipe) {
         boolean isEnough = true;
         if ( inventory.getCoffee() < recipe.getCoffee() ) {
             isEnough = false;
