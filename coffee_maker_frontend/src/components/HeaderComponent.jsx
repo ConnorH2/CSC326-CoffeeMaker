@@ -18,6 +18,9 @@ const HeaderComponent = () => {
                     <li className="nav-item">
                       <NavLink className="nav-link" to="/make-recipe">Make Recipe</NavLink>
                     </li>
+					<li className="nav-item">
+					  <NavLink className="nav-link" to="/add-ingredient">Add Ingredient</NavLink>
+				    </li>
                   </ul>
                 </div>
             </nav>

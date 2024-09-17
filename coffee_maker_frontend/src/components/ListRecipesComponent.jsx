@@ -47,9 +47,9 @@ const ListRecipesComponent = () => {
                         <th>Recipe Name</th>
                         <th>Recipe Price</th>
                         <th>Amount Coffee</th>
+                        <th>Amount Honey</th>
+                        <th>Amount Syrup</th>
                         <th>Amount Milk</th>
-                        <th>Amount Sugar</th>
-                        <th>Amount Chocolate</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
