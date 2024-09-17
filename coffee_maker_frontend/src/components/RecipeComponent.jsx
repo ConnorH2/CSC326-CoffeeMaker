@@ -103,7 +103,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipePrice"
                                     placeholder="Enter Recipe Price (as an integer)"
-                                    value={name}
+                                    value={price}
                                     onChange={(e) => setPrice(e.target.value)}
                                     className="form-control"
                                 >
@@ -116,7 +116,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Coffee"
-                                    value={name}
+                                    value={coffee}
                                     onChange={(e) => setCoffee(e.target.value)}
                                     className="form-control"
                                 >
@@ -129,7 +129,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Milk"
-                                    value={name}
+                                    value={milk}
                                     onChange={(e) => setMilk(e.target.value)}
                                     className="form-control"
                                 >
@@ -142,7 +142,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Sugar"
-                                    value={name}
+                                    value={sugar}
                                     onChange={(e) => setSugar(e.target.value)}
                                     className="form-control"
                                 >
@@ -155,7 +155,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Chocolate"
-                                    value={name}
+                                    value={chocolate}
                                     onChange={(e) => setChocolate(e.target.value)}
                                     className="form-control"
                                 >

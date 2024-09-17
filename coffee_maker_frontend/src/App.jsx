@@ -6,6 +6,7 @@ import FooterComponent from './components/FooterComponent'
 import RecipeComponent from './components/RecipeComponent'
 import InventoryComponent from './components/InventoryComponent'
 import MakeRecipeComponent from './components/MakeRecipeComponent'
+import AddIngredientComponent from './components/AddIngredientComponent'
 
 /**
  * Top level of the App.  Any new paths and the corresponding Components
@@ -22,6 +23,7 @@ function App() {
         <Route path='/add-recipe' element = { <RecipeComponent /> }></Route>
         <Route path='/inventory' element = { <InventoryComponent /> }></Route>
         <Route path='/make-recipe' element = { <MakeRecipeComponent /> }></Route>
+		<Route path='/add-ingredient' element = { <AddIngredientComponent /> }></Route>
       </Routes>
       <FooterComponent />
     </BrowserRouter>
