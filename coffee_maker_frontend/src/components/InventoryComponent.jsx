@@ -5,24 +5,24 @@ import { getInventory, updateInventory } from '../services/InventoryService'
 const InventoryComponent = () => {
 
     const [coffee, setCoffee] = useState("")
+    const [honey, setHoney] = useState("")
+    const [syrup, setSyrup] = useState("")
     const [milk, setMilk] = useState("")
-    const [sugar, setSugar] = useState("")
-    const [chocolate, setChocolate] = useState("")
 
     const [errors, setErrors] = useState({
         general: "",
         coffee: "",
+        honey: "",
+        syrup: "",
         milk: "",
-        sugar: "",
-        chocolate: "",
     })
 
     useEffect(() => {
         getInventory().then((response) => {
             setCoffee(response.data.coffee)
+            setHoney(response.data.honey)
+            setSyrup(response.data.syrup)
             setMilk(response.data.milk)
-            setSugar(response.data.sugar)
-            setChocolate(response.data.chocolate)
         }).catch(error => {
             console.error(error)
         })
@@ -32,7 +32,7 @@ const InventoryComponent = () => {
         e.preventDefault()
 
         if (validateForm()) {
-            const inventory = {coffee, milk, sugar, chocolate}
+            const inventory = {coffee, honey, syrup, milk}
             console.log(inventory)
 
             updateInventory(inventory).then((response) => {
@@ -48,7 +48,7 @@ const InventoryComponent = () => {
 
         const errorsCopy = {... errors}
 		
-		const inventory = {coffee, milk, sugar, chocolate}
+		const inventory = {coffee, honey, syrup, milk}
 		console.log(inventory)
 
 		if (coffee < 0) {
@@ -56,18 +56,18 @@ const InventoryComponent = () => {
 			valid = false;
         }
 
-		if (milk < 0) {
-            errorsCopy.milk = "Milk amount must be a positive integer"
+		if (honey < 0) {
+            errorsCopy.honey = "Milk amount must be a positive integer"
 			valid = false;
         }
 		
-		if (sugar < 0) {
-            errorsCopy.sugar = "Sugar amount must be a positive integer"
+		if (syrup < 0) {
+            errorsCopy.syrup = "Sugar amount must be a positive integer"
 			valid = false;
         }
 
-		if (chocolate < 0) {
-            errorsCopy.chocolate = "Chocolate amount must be a positive integer"
+		if (milk < 0) {
+            errorsCopy.milk = "Chocolate amount must be a positive integer"
 			valid = false;
         }
 		
@@ -107,6 +107,34 @@ const InventoryComponent = () => {
                             </div>
 
                             <div className="form-group mb-2">
+                                <label className="form-label">Amount Honey</label>
+                                <input 
+                                    type="text"
+                                    name="recipeName"
+                                    placeholder="Enter Amount Honey"
+                                    value={honey}
+                                    onChange={(e) => setHoney(e.target.value)}
+                                    className={`form-control ${errors.honey ? "is-invalid":""}`}
+                                >
+                                </input>
+								{errors.honey && <div className="invalid-feedback">{errors.honey}</div>}
+                            </div>
+
+                            <div className="form-group mb-2">
+                                <label className="form-label">Amount Syrup</label>
+                                <input 
+                                    type="text"
+                                    name="recipeName"
+                                    placeholder="Enter Amount Syrup"
+                                    value={syrup}
+                                    onChange={(e) => setSyrup(e.target.value)}
+                                    className={`form-control ${errors.syrup ? "is-invalid":""}`}
+                                >
+                                </input>
+								{errors.syrup && <div className="invalid-feedback">{errors.syrup}</div>}
+                            </div>
+
+                            <div className="form-group mb-2">
                                 <label className="form-label">Amount Milk</label>
                                 <input 
                                     type="text"
@@ -118,34 +146,6 @@ const InventoryComponent = () => {
                                 >
                                 </input>
 								{errors.milk && <div className="invalid-feedback">{errors.milk}</div>}
-                            </div>
-
-                            <div className="form-group mb-2">
-                                <label className="form-label">Amount Sugar</label>
-                                <input 
-                                    type="text"
-                                    name="recipeName"
-                                    placeholder="Enter Amount Sugar"
-                                    value={sugar}
-                                    onChange={(e) => setSugar(e.target.value)}
-                                    className={`form-control ${errors.sugar ? "is-invalid":""}`}
-                                >
-                                </input>
-								{errors.sugar && <div className="invalid-feedback">{errors.sugar}</div>}
-                            </div>
-
-                            <div className="form-group mb-2">
-                                <label className="form-label">Amount Chocolate</label>
-                                <input 
-                                    type="text"
-                                    name="recipeName"
-                                    placeholder="Enter Amount Chocolate"
-                                    value={chocolate}
-                                    onChange={(e) => setChocolate(e.target.value)}
-                                    className={`form-control ${errors.chocolate ? "is-invalid":""}`}
-                                >
-                                </input>
-								{errors.chocolate && <div className="invalid-feedback">{errors.chocolate}</div>}
                             </div>
 
                             <button className="btn btn-success" onClick={(e) => modifyInventory(e)}>Update Inventory</button>

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { listRecipes, deleteRecipe } from '../services/RecipesService'
+import { listRecipes } from '../services/RecipesService'
 import { useNavigate } from 'react-router-dom'
 
-/** Lists all the recipes and provide the option to create a new recipe
- * and delete an existing recipe.
+/** Lists all the recipes and provide the option to edit an existing recipe.
  */
-const ListRecipesComponent = () => {
+const EditRecipeListComponent = () => {
 
     const [recipes, setRecipes] = useState([])
 
@@ -22,25 +21,14 @@ const ListRecipesComponent = () => {
             console.error(error)
         })
     }
-
-    function addNewRecipe() {
-        navigator('/add-recipe')
-    }
-
-    function removeRecipe(id) {
-        console.log(id)
-
-        deleteRecipe(id).then((response) => {
-            getAllRecipes()
-        }).catch(error => {
-            console.error(error)
-        })
-    }
+	
+	function editRecipe() {
+	        navigator('/edit-recipe')
+	    }
 
     return (
         <div className="container">
             <h2 className="text-center">List of Recipes</h2>
-            <button className="btn btn-primary mb-2" onClick={ addNewRecipe }>Add Recipe</button>
             <table className="table table-striped table-bordered">
                 <thead>
                     <tr>
@@ -64,9 +52,9 @@ const ListRecipesComponent = () => {
                             <td>{recipe.sugar}</td>
                             <td>{recipe.chocolate}</td>
                             <td>
-                                <button className="btn btn-danger" onClick={() => removeRecipe(recipe.id)}
+                                <button className="btn btn-success" onClick={ editRecipe }
                                     style={{marginLeft: '10px'}}
-                                >Delete</button>
+                                >Edit</button>
                             </td>
                         </tr>)
                     }
@@ -77,4 +65,4 @@ const ListRecipesComponent = () => {
 
 }
 
-export default ListRecipesComponent
+export default EditRecipeListComponent

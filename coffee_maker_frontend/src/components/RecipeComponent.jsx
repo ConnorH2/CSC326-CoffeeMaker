@@ -29,6 +29,17 @@ const RecipeComponent = () => {
         if (validateForm()) {
             const recipe = {name, price, coffee, milk, sugar, chocolate}
             console.log(recipe)
+			
+			if( (coffee.length == 0 || (coffee.length == 1 && coffee.charAt(0) == "0")) && 
+		(milk.length == 0 || (milk.length == 1 && milk.charAt(0) == "0")) && 
+	    (sugar.length == 0 || (sugar.length == 1 && sugar.charAt(0) == "0")) && 
+	    (chocolate.length == 0 || (chocolate.length == 1 && chocolate.charAt(0) == "0")) )
+				{
+					const errorsCopy = {... errors}
+					errorsCopy.general = "Recipe does not contain any ingredients."
+					setErrors(errorsCopy)
+					return false
+				}
 
             createRecipe(recipe).then((response) => {
                 console.log(response.data)
@@ -103,7 +114,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipePrice"
                                     placeholder="Enter Recipe Price (as an integer)"
-                                    value={name}
+                                    value={price}
                                     onChange={(e) => setPrice(e.target.value)}
                                     className="form-control"
                                 >
@@ -116,7 +127,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Coffee"
-                                    value={name}
+                                    value={coffee}
                                     onChange={(e) => setCoffee(e.target.value)}
                                     className="form-control"
                                 >
@@ -129,7 +140,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Milk"
-                                    value={name}
+                                    value={milk}
                                     onChange={(e) => setMilk(e.target.value)}
                                     className="form-control"
                                 >
@@ -142,7 +153,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Sugar"
-                                    value={name}
+                                    value={sugar}
                                     onChange={(e) => setSugar(e.target.value)}
                                     className="form-control"
                                 >
@@ -155,7 +166,7 @@ const RecipeComponent = () => {
                                     type="text"
                                     name="recipeName"
                                     placeholder="Enter Amount Chocolate"
-                                    value={name}
+                                    value={chocolate}
                                     onChange={(e) => setChocolate(e.target.value)}
                                     className="form-control"
                                 >
