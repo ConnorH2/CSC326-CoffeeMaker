@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import edu.ncsu.csc326.coffee_maker.entity.Ingredient;
 import edu.ncsu.csc326.coffee_maker.entity.Recipe;
 
 /**
@@ -37,56 +40,52 @@ class RecipeRepositoryTest {
     @BeforeEach
     public void setUp () throws Exception {
         recipeRepository.deleteAll();
+        final Ingredient ingredient1a = new Ingredient( "Milk", 2222 );
+        final List<Ingredient> ingredients1 = new ArrayList<Ingredient>();
+        ingredients1.add( ingredient1a );
 
-        final Recipe recipe1 = new Recipe( 1L, "Coffee", 50, 3, 0, 0, 0 );
-        final Recipe recipe2 = new Recipe( 2L, "Latte", 100, 3, 2, 1, 0 );
+        final Ingredient ingredient2a = new Ingredient( "Water", 3333 );
+        final Ingredient ingredient2b = new Ingredient( "Sugar", 4444 );
+        final List<Ingredient> ingredients2 = new ArrayList<Ingredient>();
+        ingredients2.add( ingredient2a );
+        ingredients2.add( ingredient2b );
+
+        final Recipe recipe1 = new Recipe( 1L, "Coffee", 50, ingredients1 );
+        final Recipe recipe2 = new Recipe( 2L, "Latte", 100, ingredients2 );
 
         recipeRepository.save( recipe1 );
         recipeRepository.save( recipe2 );
     }
 
+    /**
+     * Tets getRecipeByName
+     */
     @Test
     public void testGetRecipeByName () {
         final Optional<Recipe> recipe = recipeRepository.findByName( "Coffee" );
-        final Recipe actualRecipe = recipe.get(); 
+        final Recipe actualRecipe = recipe.get();
         assertAll( "Recipe contents", () -> assertEquals( "Coffee", actualRecipe.getName() ),
-                () -> assertEquals( 50, actualRecipe.getPrice() ), () -> assertEquals( 3, actualRecipe.getCoffee() ),
-                () -> assertEquals( 0, actualRecipe.getMilk() ), () -> assertEquals( 0, actualRecipe.getSugar() ),
-                () -> assertEquals( 0, actualRecipe.getChocolate() ) );
-
-        //assertEquals( Long.compare( actualRecipe.getId(), 1L ), 0 ) ;
-        assertTrue( actualRecipe.getMilk() == 0 );
-        assertTrue( actualRecipe.getSugar() == 0 );
-        assertTrue( actualRecipe.getChocolate() == 0 );
+                () -> assertEquals( 50, actualRecipe.getPrice() ) );
 
         actualRecipe.setName( "Coffee2" );
         actualRecipe.setPrice( 0 );
-        actualRecipe.setCoffee( 5 );
-        actualRecipe.setMilk( 1 );
-        actualRecipe.setSugar( 1 );
-        actualRecipe.setChocolate( 1 );
 
         assertAll( "Recipe contents", () -> assertEquals( "Coffee2", actualRecipe.getName() ),
-                () -> assertEquals( 0, actualRecipe.getPrice() ), () -> assertEquals( 5, actualRecipe.getCoffee() ),
-                () -> assertEquals( 1, actualRecipe.getMilk() ), () -> assertEquals( 1, actualRecipe.getSugar() ),
-                () -> assertEquals( 1, actualRecipe.getChocolate() ) );
+                () -> assertEquals( 0, actualRecipe.getPrice() ) );
 
         actualRecipe.setName( "Coffee" );
         actualRecipe.setPrice( 50 );
-        actualRecipe.setCoffee( 3 );
-        actualRecipe.setMilk( 0 );
-        actualRecipe.setSugar( 0 );
-        actualRecipe.setChocolate( 0 );
 
         final Optional<Recipe> recipe2 = recipeRepository.findByName( "Latte" );
         final Recipe actualRecipe2 = recipe2.get();
         assertAll( "Recipe contents", () -> assertEquals( "Latte", actualRecipe2.getName() ),
-                () -> assertEquals( 100, actualRecipe2.getPrice() ), () -> assertEquals( 3, actualRecipe2.getCoffee() ),
-                () -> assertEquals( 2, actualRecipe2.getMilk() ), () -> assertEquals( 1, actualRecipe2.getSugar() ),
-                () -> assertEquals( 0, actualRecipe2.getChocolate() ) );
+                () -> assertEquals( 100, actualRecipe2.getPrice() ) );
 
     }
 
+    /**
+     * Test get recipe get by name invalid
+     */
     @Test
     public void testGetRecipeByNameInvalid () {
         final Optional<Recipe> recipe = recipeRepository.findByName( "Unknown" );
