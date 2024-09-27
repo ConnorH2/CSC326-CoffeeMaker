@@ -229,7 +229,7 @@ public class RecipeControllerTest {
         // Lets see that it has all three
         assertTrue( recipe.contains( recipe3.getName() ) );
         assertTrue( recipe.contains( recipe2.getName() ) );
-        assertTrue( recipe.contains( recipe1.getName() ) );
+        assertTrue( recipe.contains( recipe1.getName() ) ); // fail?
         // And that these values exist
         assertTrue( recipe.contains( "price\":" + recipe3.getPrice() ) );
         assertTrue( recipe.contains( recipe3.getIngredients().getFirst().getName() ) );
