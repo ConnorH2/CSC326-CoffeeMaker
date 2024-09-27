@@ -3,14 +3,14 @@ package edu.ncsu.csc326.coffee_maker.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
+import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -25,18 +25,18 @@ public class Recipe {
     /** Recipe id */
     @Id
     @GeneratedValue ( strategy = GenerationType.IDENTITY )
-    private Long             id;
+    private Long                id;
 
     /** Recipe name */
-    private String           name;
+    private String              name;
 
     /** Recipe price */
-    private Integer          price;
+    private Integer             price;
 
     /** List of recipes **/
-    @OneToMany ( cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER )
-    @JoinColumn ( name = "recipe_id" ) // Foreign key in Ingredient table
-    private List<Ingredient> ingredients = new ArrayList<Ingredient>();
+    @ElementCollection
+    @CollectionTable ( name = "recipes_ingredients", joinColumns = @JoinColumn ( name = "recipe_id" ) )
+    private List<IngredientDto> ingredients = new ArrayList<IngredientDto>();
 
     /**
      * Creates a default recipe for the coffee maker.
@@ -55,7 +55,7 @@ public class Recipe {
      * @param price
      *            the price of the recipe
      */
-    public Recipe ( final Long id, final String name, final Integer price, final List<Ingredient> ingredients ) {
+    public Recipe ( final Long id, final String name, final Integer price, final List<IngredientDto> ingredients ) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -124,7 +124,7 @@ public class Recipe {
      * Gets the list of ingredients in this recipe
      * @return list of the recipe's ingredients
      */
-    public List<Ingredient> getIngredients () {
+    public List<IngredientDto> getIngredients () {
         return ingredients;
     }
 
@@ -132,7 +132,7 @@ public class Recipe {
      * Sets the list of ingredients in this recipe
      * @return list of the recipe's ingredients
      */
-    public void setIngredients ( final List<Ingredient> ingredients ) {
+    public void setIngredients ( final List<IngredientDto> ingredients ) {
         this.ingredients = ingredients;
     }
 }

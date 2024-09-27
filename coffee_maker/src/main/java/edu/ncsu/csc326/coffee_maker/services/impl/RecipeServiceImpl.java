@@ -1,18 +1,14 @@
 package edu.ncsu.csc326.coffee_maker.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
 import edu.ncsu.csc326.coffee_maker.dto.RecipeDto;
-import edu.ncsu.csc326.coffee_maker.entity.Ingredient;
 import edu.ncsu.csc326.coffee_maker.entity.Recipe;
 import edu.ncsu.csc326.coffee_maker.exception.ResourceNotFoundException;
-import edu.ncsu.csc326.coffee_maker.mapper.IngredientMapper;
 import edu.ncsu.csc326.coffee_maker.mapper.RecipeMapper;
 import edu.ncsu.csc326.coffee_maker.repositories.RecipeRepository;
 import edu.ncsu.csc326.coffee_maker.services.RecipeService;
@@ -121,11 +117,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         recipe.setName( recipeDto.getName() );
         recipe.setPrice( recipeDto.getPrice() );
-        final List<Ingredient> ingredientsDto = new ArrayList<Ingredient>();
-        for ( final IngredientDto ingredientDto : recipeDto.getIngredients() ) {
-            ingredientsDto.add( IngredientMapper.mapToIngredient( ingredientDto ) );
-        }
-        recipe.setIngredients( ingredientsDto );
+        recipe.setIngredients( recipeDto.getIngredients() );
 
         final Recipe savedRecipe = recipeRepository.save( recipe );
 

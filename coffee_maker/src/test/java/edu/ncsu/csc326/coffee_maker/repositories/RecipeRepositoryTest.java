@@ -18,7 +18,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import edu.ncsu.csc326.coffee_maker.entity.Ingredient;
+import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
 import edu.ncsu.csc326.coffee_maker.entity.Recipe;
 
 /**
@@ -40,13 +40,13 @@ class RecipeRepositoryTest {
     @BeforeEach
     public void setUp () throws Exception {
         recipeRepository.deleteAll();
-        final Ingredient ingredient1a = new Ingredient( "Milk", 2222 );
-        final List<Ingredient> ingredients1 = new ArrayList<Ingredient>();
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
         ingredients1.add( ingredient1a );
 
-        final Ingredient ingredient2a = new Ingredient( "Water", 3333 );
-        final Ingredient ingredient2b = new Ingredient( "Sugar", 4444 );
-        final List<Ingredient> ingredients2 = new ArrayList<Ingredient>();
+        final IngredientDto ingredient2a = new IngredientDto( "Water", 3333 );
+        final IngredientDto ingredient2b = new IngredientDto( "Sugar", 4444 );
+        final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
         ingredients2.add( ingredient2a );
         ingredients2.add( ingredient2b );
 
