@@ -96,10 +96,6 @@ public class RecipeController {
             return new ResponseEntity<>( recipeDto, HttpStatus.INSUFFICIENT_STORAGE );
         }
         else {
-            // recipeService.getRecipeByName( recipeDto.getName() ).setPrice(
-            // recipeDto.getPrice() );
-            // recipeService.getRecipeByName( recipeDto.getName()
-            // ).setIngredients( recipeDto.getIngredients() );
             final RecipeDto savedRecipeDto = recipeService.updateRecipe( recipeDto.getId(), recipeDto );
             return ResponseEntity.ok( savedRecipeDto );
         }
