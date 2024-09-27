@@ -74,16 +74,17 @@ public class MakeRecipeController {
      *         exceptions if not
      */
     private int makeRecipe ( final RecipeDto toPurchase, final int amtPaid ) {
-        final int change = amtPaid;
-        /*
-         * InventoryDto inventoryDto = inventoryService.getInventory(); if
-         * (toPurchase.getPrice() <= amtPaid) { if
-         * (makeRecipeService.makeRecipe(inventoryDto, toPurchase)) { change =
-         * amtPaid - toPurchase.getPrice(); return change; } else { // not
-         * enough inventory return change; } } else { //not enough money return
-         * change; }
-         */
-        return change; // TODO REMOVE
+        int change = amtPaid;
+
+        if ( toPurchase.getPrice() <= amtPaid ) {
+            if ( makeRecipeService.makeRecipe( toPurchase ) ) {
+                change = amtPaid - toPurchase.getPrice();
+                return change;
+            }
+        }
+
+        // Not enough amtPaid and/or ingredients
+        return change;
 
     }
 
