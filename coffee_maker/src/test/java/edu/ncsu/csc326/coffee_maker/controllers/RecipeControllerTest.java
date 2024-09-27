@@ -85,6 +85,7 @@ public class RecipeControllerTest {
     @Test
     @Transactional
     public void testCreateRecipe () throws Exception {
+        recipeRepository.deleteAll();
         // final IngredientDto ingredient1 = new IngredientDto( "Coffee", 10 );
         // final IngredientDto ingredient2 = new IngredientDto( "Sugar", 10 );
         // final IngredientDto ingredient3 = new IngredientDto( "Honey", 10 );
