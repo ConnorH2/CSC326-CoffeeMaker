@@ -104,7 +104,7 @@ class MakeRecipeControllerTest {
         final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
         ingredients1.add( recipeIngredient1 );
         ingredients1.add( recipeIngredient3 );
-        final RecipeDto R1 = new RecipeDto( 0L, "R1", 10, ingredients1 );
+        final RecipeDto R1 = new RecipeDto( null, "R1", 10, ingredients1 );
 
         // Create the recipe in the system
         mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
@@ -166,7 +166,7 @@ class MakeRecipeControllerTest {
         final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
         ingredients3.add( recipeIngredient1 );
         ingredients3.add( recipeIngredient4 );
-        final RecipeDto R3 = new RecipeDto( 0L, "R3", 30, ingredients3 );
+        final RecipeDto R3 = new RecipeDto( null, "R3", 30, ingredients3 );
         // Create the recipe in the system
         mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( R3 ) ).accept( MediaType.APPLICATION_JSON ) );
@@ -188,6 +188,9 @@ class MakeRecipeControllerTest {
         assertTrue( ingredientStr.contains( "\"name\":\"Sugar\",\"amount\":0" ) );
         assertTrue( ingredientStr.contains( "\"name\":\"Honey\",\"amount\":3" ) );
         assertTrue( ingredientStr.contains( "\"name\":\"Cream\",\"amount\":8" ) );
+
+        recipeRepository.deleteAll();
+        ingredientRepository.deleteAll();
     }
 
 }

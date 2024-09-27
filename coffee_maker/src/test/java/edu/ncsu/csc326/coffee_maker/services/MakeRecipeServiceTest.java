@@ -84,8 +84,8 @@ class MakeRecipeServiceTest {
         final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
         ingredients1.add( recipeIngredient1 );
         ingredients1.add( recipeIngredient3 );
-        final RecipeDto R1 = new RecipeDto( 0L, "R1", 10, ingredients1 );
-        recipeService.createRecipe( new RecipeDto( 0L, "R1", 10, ingredients1 ) );
+        final RecipeDto R1 = new RecipeDto( null, "R1", 10, ingredients1 );
+        recipeService.createRecipe( R1 );
 
         assertTrue( makeRecipeService.makeRecipe( R1 ) );
 
@@ -104,7 +104,7 @@ class MakeRecipeServiceTest {
         final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
         ingredients2.add( recipeIngredient1 );
         ingredients2.add( recipeIngredient2 );
-        final RecipeDto R2 = new RecipeDto( 0L, "R2", 20, ingredients2 );
+        final RecipeDto R2 = new RecipeDto( null, "R2", 20, ingredients2 );
         recipeService.createRecipe( R2 );
 
         assertFalse( makeRecipeService.makeRecipe( R2 ) );
@@ -124,7 +124,7 @@ class MakeRecipeServiceTest {
         final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
         ingredients3.add( recipeIngredient1 );
         ingredients3.add( recipeIngredient4 );
-        final RecipeDto R3 = new RecipeDto( 0L, "R3", 30, ingredients3 );
+        final RecipeDto R3 = new RecipeDto( null, "R3", 30, ingredients3 );
         recipeService.createRecipe( R3 );
 
         assertFalse( makeRecipeService.makeRecipe( R3 ) );
