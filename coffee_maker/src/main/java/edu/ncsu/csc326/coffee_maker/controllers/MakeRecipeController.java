@@ -10,9 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import edu.ncsu.csc326.coffee_maker.dto.InventoryDto;
 import edu.ncsu.csc326.coffee_maker.dto.RecipeDto;
-import edu.ncsu.csc326.coffee_maker.services.InventoryService;
 import edu.ncsu.csc326.coffee_maker.services.MakeRecipeService;
 import edu.ncsu.csc326.coffee_maker.services.RecipeService;
 
@@ -25,8 +23,9 @@ import edu.ncsu.csc326.coffee_maker.services.RecipeService;
 public class MakeRecipeController {
 
     /** Connection to InventoryService */
-    @Autowired
-    private InventoryService  inventoryService;
+    /*
+     * @Autowired private InventoryService inventoryService;
+     */
 
     /** Connection to RecipeService */
     @Autowired
@@ -76,22 +75,16 @@ public class MakeRecipeController {
      */
     private int makeRecipe ( final RecipeDto toPurchase, final int amtPaid ) {
         int change = amtPaid;
-        final InventoryDto inventoryDto = inventoryService.getInventory();
 
         if ( toPurchase.getPrice() <= amtPaid ) {
-            if ( makeRecipeService.makeRecipe( inventoryDto, toPurchase ) ) {
+            if ( makeRecipeService.makeRecipe( toPurchase ) ) {
                 change = amtPaid - toPurchase.getPrice();
                 return change;
             }
-            else {
-                // not enough inventory
-                return change;
-            }
         }
-        else {
-            // not enough money
-            return change;
-        }
+
+        // Not enough amtPaid and/or ingredients
+        return change;
 
     }
 

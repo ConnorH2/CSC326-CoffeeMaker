@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
 import edu.ncsu.csc326.coffee_maker.dto.RecipeDto;
 import edu.ncsu.csc326.coffee_maker.exception.ResourceNotFoundException;
 import edu.ncsu.csc326.coffee_maker.repositories.RecipeRepository;
@@ -52,20 +54,20 @@ public class RecipeServiceTest {
     @Test
     @Transactional
     public void testCreateRecipe () {
-        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, 2, 1, 1, 0 );
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient1a );
+
+        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 5, ingredients1 );
         final RecipeDto savedRecipe = recipeService.createRecipe( recipeDto );
         assertAll( "Recipe contents", () -> assertTrue( savedRecipe.getId() > 1L ),
-                () -> assertEquals( "Coffee", savedRecipe.getName() ), () -> assertEquals( 50, savedRecipe.getPrice() ),
-                () -> assertEquals( 2, savedRecipe.getCoffee() ), () -> assertEquals( 1, savedRecipe.getMilk() ),
-                () -> assertEquals( 1, savedRecipe.getSugar() ), () -> assertEquals( 0, savedRecipe.getChocolate() ) );
+                () -> assertEquals( "Coffee", savedRecipe.getName() ),
+                () -> assertEquals( 5, savedRecipe.getPrice() ) );
 
         final RecipeDto retrievedRecipe = recipeService.getRecipeById( savedRecipe.getId() );
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe.getId(), retrievedRecipe.getId() ),
                 () -> assertEquals( "Coffee", retrievedRecipe.getName() ),
-                () -> assertEquals( 50, retrievedRecipe.getPrice() ),
-                () -> assertEquals( 2, retrievedRecipe.getCoffee() ),
-                () -> assertEquals( 1, retrievedRecipe.getMilk() ), () -> assertEquals( 1, retrievedRecipe.getSugar() ),
-                () -> assertEquals( 0, retrievedRecipe.getChocolate() ) );
+                () -> assertEquals( 5, retrievedRecipe.getPrice() ) );
     }
 
     /**
@@ -74,16 +76,17 @@ public class RecipeServiceTest {
      */
     @Test
     void testGetRecipeById () {
-        final RecipeDto recipeDto = new RecipeDto( 1L, "Cube of sugar", 10, 0, 0, 1, 0 );
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient1a );
+
+        final RecipeDto recipeDto = new RecipeDto( 1L, "Cube of sugar", 10, ingredients1 );
         final RecipeDto savedRecipe = recipeService.createRecipe( recipeDto );
         final RecipeDto retrievedRecipe = recipeService.getRecipeById( savedRecipe.getId() );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe.getId(), retrievedRecipe.getId() ),
                 () -> assertEquals( "Cube of sugar", retrievedRecipe.getName() ),
-                () -> assertEquals( 10, retrievedRecipe.getPrice() ),
-                () -> assertEquals( 0, retrievedRecipe.getCoffee() ),
-                () -> assertEquals( 0, retrievedRecipe.getMilk() ), () -> assertEquals( 1, retrievedRecipe.getSugar() ),
-                () -> assertEquals( 0, retrievedRecipe.getChocolate() ) );
+                () -> assertEquals( 10, retrievedRecipe.getPrice() ) );
     }
 
     /**
@@ -92,28 +95,28 @@ public class RecipeServiceTest {
      */
     @Test
     void testGetRecipeByName () {
-        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, 2, 1, 1, 0 );
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient1a );
+
+        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, ingredients1 );
         final RecipeDto savedRecipe = recipeService.createRecipe( recipeDto );
         final RecipeDto retrievedRecipe = recipeService.getRecipeByName( savedRecipe.getName() );
 
-        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, 0, 0, 0, 3 );
+        final IngredientDto ingredient2a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient2a );
+        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, ingredients2 );
         final RecipeDto savedRecipe2 = recipeService.createRecipe( recipeDto2 );
         final RecipeDto retrievedRecipe2 = recipeService.getRecipeByName( savedRecipe2.getName() );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe.getId(), retrievedRecipe.getId() ),
                 () -> assertEquals( "Coffee", retrievedRecipe.getName() ),
-                () -> assertEquals( 50, retrievedRecipe.getPrice() ),
-                () -> assertEquals( 2, retrievedRecipe.getCoffee() ),
-                () -> assertEquals( 1, retrievedRecipe.getMilk() ), () -> assertEquals( 1, retrievedRecipe.getSugar() ),
-                () -> assertEquals( 0, retrievedRecipe.getChocolate() ) );
+                () -> assertEquals( 50, retrievedRecipe.getPrice() ) );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe2.getId(), retrievedRecipe2.getId() ),
                 () -> assertEquals( "Chocolate bar", retrievedRecipe2.getName() ),
-                () -> assertEquals( 30, retrievedRecipe2.getPrice() ),
-                () -> assertEquals( 0, retrievedRecipe2.getCoffee() ),
-                () -> assertEquals( 0, retrievedRecipe2.getMilk() ),
-                () -> assertEquals( 0, retrievedRecipe2.getSugar() ),
-                () -> assertEquals( 3, retrievedRecipe2.getChocolate() ) );
+                () -> assertEquals( 30, retrievedRecipe2.getPrice() ) );
     }
 
     /**
@@ -122,10 +125,18 @@ public class RecipeServiceTest {
      */
     @Test
     void testIsDuplicateName () {
-        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, 2, 1, 1, 0 );
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient1a );
+
+        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, ingredients1 );
         recipeService.createRecipe( recipeDto );
 
-        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, 0, 0, 0, 3 );
+        final IngredientDto ingredient2a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient2a );
+
+        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, ingredients2 );
         recipeService.createRecipe( recipeDto2 );
 
         assertFalse( recipeService.isDuplicateName( "coffeee" ) );
@@ -143,13 +154,20 @@ public class RecipeServiceTest {
      */
     @Test
     void testGetAllRecipes () {
-        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, 2, 1, 1, 0 );
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient1a );
+        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, ingredients1 );
         final RecipeDto savedRecipe = recipeService.createRecipe( recipeDto );
-
-        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, 0, 0, 0, 3 );
+        final IngredientDto ingredient2a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient2a );
+        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, ingredients2 );
         final RecipeDto savedRecipe2 = recipeService.createRecipe( recipeDto2 );
-
-        final RecipeDto recipeDto3 = new RecipeDto( 1L, "Cube of sugar", 10, 0, 0, 1, 0 );
+        final IngredientDto ingredient3a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient3a );
+        final RecipeDto recipeDto3 = new RecipeDto( 1L, "Cube of sugar", 10, ingredients3 );
         final RecipeDto savedRecipe3 = recipeService.createRecipe( recipeDto3 );
 
         final List<RecipeDto> r = recipeService.getAllRecipes();
@@ -159,19 +177,13 @@ public class RecipeServiceTest {
         final RecipeDto r3 = r.get( 2 );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe.getId(), r1.getId() ),
-                () -> assertEquals( "Coffee", r1.getName() ), () -> assertEquals( 50, r1.getPrice() ),
-                () -> assertEquals( 2, r1.getCoffee() ), () -> assertEquals( 1, r1.getMilk() ),
-                () -> assertEquals( 1, r1.getSugar() ), () -> assertEquals( 0, r1.getChocolate() ) );
+                () -> assertEquals( "Coffee", r1.getName() ), () -> assertEquals( 50, r1.getPrice() ) );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe2.getId(), r2.getId() ),
-                () -> assertEquals( "Chocolate bar", r2.getName() ), () -> assertEquals( 30, r2.getPrice() ),
-                () -> assertEquals( 0, r2.getCoffee() ), () -> assertEquals( 0, r2.getMilk() ),
-                () -> assertEquals( 0, r2.getSugar() ), () -> assertEquals( 3, r2.getChocolate() ) );
+                () -> assertEquals( "Chocolate bar", r2.getName() ), () -> assertEquals( 30, r2.getPrice() ) );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe3.getId(), r3.getId() ),
-                () -> assertEquals( "Cube of sugar", r3.getName() ), () -> assertEquals( 10, r3.getPrice() ),
-                () -> assertEquals( 0, r3.getCoffee() ), () -> assertEquals( 0, r3.getMilk() ),
-                () -> assertEquals( 1, r3.getSugar() ), () -> assertEquals( 0, r3.getChocolate() ) );
+                () -> assertEquals( "Cube of sugar", r3.getName() ), () -> assertEquals( 10, r3.getPrice() ) );
     }
 
     /**
@@ -180,7 +192,10 @@ public class RecipeServiceTest {
      */
     @Test
     void testUpdateRecipe () {
-        RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, 2, 1, 1, 0 );
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient1a );
+        RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, ingredients1 );
         final RecipeDto r1 = recipeService.createRecipe( recipeDto );
 
         assertThrows( ResourceNotFoundException.class, () -> recipeService.updateRecipe( 999L, r1 ) );
@@ -188,11 +203,12 @@ public class RecipeServiceTest {
         final long id = r1.getId();
 
         assertAll( "Recipe contents", () -> assertEquals( id, r1.getId() ),
-                () -> assertEquals( "Coffee", r1.getName() ), () -> assertEquals( 50, r1.getPrice() ),
-                () -> assertEquals( 2, r1.getCoffee() ), () -> assertEquals( 1, r1.getMilk() ),
-                () -> assertEquals( 1, r1.getSugar() ), () -> assertEquals( 0, r1.getChocolate() ) );
+                () -> assertEquals( "Coffee", r1.getName() ), () -> assertEquals( 50, r1.getPrice() ) );
 
-        recipeDto = new RecipeDto( 0L, "Cuppa Coffee", 70, 3, 1, 0, 0 );
+        final IngredientDto ingredient2a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient2a );
+        recipeDto = new RecipeDto( 0L, "Cuppa Coffee", 70, ingredients2 );
         recipeService.updateRecipe( id, recipeDto );
 
         final RecipeDto r2 = recipeService.getRecipeById( id );
@@ -222,13 +238,22 @@ public class RecipeServiceTest {
      */
     @Test
     void testDeleteRecipe () {
-        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, 2, 1, 1, 0 );
+        final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient1a );
+        final RecipeDto recipeDto = new RecipeDto( 0L, "Coffee", 50, ingredients1 );
         final RecipeDto savedRecipe = recipeService.createRecipe( recipeDto );
 
-        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, 0, 0, 0, 3 );
+        final IngredientDto ingredient2a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient2a );
+        final RecipeDto recipeDto2 = new RecipeDto( 3L, "Chocolate bar", 30, ingredients2 );
         final RecipeDto savedRecipe2 = recipeService.createRecipe( recipeDto2 );
 
-        final RecipeDto recipeDto3 = new RecipeDto( 1L, "Cube of sugar", 10, 0, 0, 1, 0 );
+        final IngredientDto ingredient3a = new IngredientDto( "Milk", 2222 );
+        final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
+        ingredients1.add( ingredient3a );
+        final RecipeDto recipeDto3 = new RecipeDto( 1L, "Cube of sugar", 10, ingredients3 );
         final RecipeDto savedRecipe3 = recipeService.createRecipe( recipeDto3 );
 
         final List<RecipeDto> rlist1 = recipeService.getAllRecipes();
@@ -245,14 +270,10 @@ public class RecipeServiceTest {
         final RecipeDto r3 = rlist2.get( 1 );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe.getId(), r1.getId() ),
-                () -> assertEquals( "Coffee", r1.getName() ), () -> assertEquals( 50, r1.getPrice() ),
-                () -> assertEquals( 2, r1.getCoffee() ), () -> assertEquals( 1, r1.getMilk() ),
-                () -> assertEquals( 1, r1.getSugar() ), () -> assertEquals( 0, r1.getChocolate() ) );
+                () -> assertEquals( "Coffee", r1.getName() ), () -> assertEquals( 50, r1.getPrice() ) );
 
         assertAll( "Recipe contents", () -> assertEquals( savedRecipe3.getId(), r3.getId() ),
-                () -> assertEquals( "Cube of sugar", r3.getName() ), () -> assertEquals( 10, r3.getPrice() ),
-                () -> assertEquals( 0, r3.getCoffee() ), () -> assertEquals( 0, r3.getMilk() ),
-                () -> assertEquals( 1, r3.getSugar() ), () -> assertEquals( 0, r3.getChocolate() ) );
+                () -> assertEquals( "Cube of sugar", r3.getName() ), () -> assertEquals( 10, r3.getPrice() ) );
     }
 
 }

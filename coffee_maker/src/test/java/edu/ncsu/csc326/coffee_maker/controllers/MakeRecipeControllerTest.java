@@ -3,10 +3,15 @@
  */
 package edu.ncsu.csc326.coffee_maker.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,16 +20,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 
 import edu.ncsu.csc326.coffee_maker.TestUtils;
-import edu.ncsu.csc326.coffee_maker.dto.InventoryDto;
+import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
 import edu.ncsu.csc326.coffee_maker.dto.RecipeDto;
-import edu.ncsu.csc326.coffee_maker.entity.Inventory;
-import edu.ncsu.csc326.coffee_maker.mapper.InventoryMapper;
-import edu.ncsu.csc326.coffee_maker.repositories.InventoryRepository;
+import edu.ncsu.csc326.coffee_maker.repositories.IngredientRepository;
 import edu.ncsu.csc326.coffee_maker.repositories.RecipeRepository;
-import edu.ncsu.csc326.coffee_maker.services.RecipeService;
 
 /**
  *
@@ -35,84 +36,161 @@ class MakeRecipeControllerTest {
 
     /** Mock MVC for testing controller */
     @Autowired
-    private MockMvc             mvc;
+    private MockMvc              mvc;
 
     /** Reference to recipe repository */
     @Autowired
-    private RecipeRepository    recipeRepository;
+    private RecipeRepository     recipeRepository;
 
-    /** Reference to inventory repository */
+    /** Reference to ingredient repository */
     @Autowired
-    private InventoryRepository inventoryRepository;
-
-    /** Connection to RecipeService */
-    @Autowired
-    private RecipeService       recipeService;
+    private IngredientRepository ingredientRepository;
 
     /**
-     * Sets up the test case.
-     *
      * @throws java.lang.Exception
-     *             if error
      */
     @BeforeEach
-    public void setUp () throws Exception {
-        inventoryRepository.deleteAll();
+    void setUp () throws Exception {
         recipeRepository.deleteAll();
+        ingredientRepository.deleteAll();
     }
 
     /**
      * Test method for
      * {@link edu.ncsu.csc326.coffee_maker.controllers.MakeRecipeController#makeRecipe(java.lang.String, java.lang.Integer)}.
-     *
-     * @throws Exception
-     *             an exception that occurs when the api request is invalid
      */
     @Test
-    @Transactional
     void testMakeRecipe () throws Exception {
-        // Initialize the inventory
-        final InventoryDto inventoryDto = new InventoryDto( 6L, 10, 11, 12, 13 );
-        final Inventory inventory = InventoryMapper.mapToInventory( inventoryDto );
-        inventoryRepository.save( inventory );
+        final IngredientDto ingredient1 = new IngredientDto( "Coffee", 5 );
+        final IngredientDto ingredient2 = new IngredientDto( "Sugar", 0 );
+        final IngredientDto ingredient3 = new IngredientDto( "Honey", 3 );
+        final IngredientDto ingredient4 = new IngredientDto( "Cream", 10 );
+
+        // Add the ingredients
+        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "0" ) )
+                .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
+        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient3 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3" ) )
+                .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
+        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient4 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
+                .andExpect( jsonPath( "$.name" ).value( "Cream" ) );
+
+        String ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
+
+        // check that the values are correct
+        assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":5" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Sugar\",\"amount\":0" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Honey\",\"amount\":3" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Cream\",\"amount\":10" ) );
 
         // Create recipes
-        final RecipeDto recipeDto1 = new RecipeDto( null, "coffee", 10, 3, 0, 0, 0 );
-        recipeService.createRecipe( recipeDto1 );
-        final RecipeDto recipeDto2 = new RecipeDto( null, "big_coffee", 30, 10, 0, 0, 0 );
-        recipeService.createRecipe( recipeDto2 );
+        final IngredientDto recipeIngredient1 = new IngredientDto( "Coffee", 3 );
+        // final IngredientDto recipeIngredient2 = new IngredientDto( "Sugar", 1
+        // );
+        final IngredientDto recipeIngredient3 = new IngredientDto( "Cream", 2 );
+        final IngredientDto recipeIngredient4 = new IngredientDto( "Water", 3 );
 
-        // Make recipes
+        // Make a valid recipe
+        final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
+        ingredients1.add( recipeIngredient1 );
+        ingredients1.add( recipeIngredient3 );
+        final RecipeDto R1 = new RecipeDto( null, "R1", 10, ingredients1 );
 
-        // Make a coffee
-        mvc.perform( post( "/api/makerecipe/coffee" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( 100 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
+        // Create the recipe in the system
+        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( R1 ) ).accept( MediaType.APPLICATION_JSON ) );
+        assertEquals( 1, recipeRepository.count() );
 
-        final Inventory inv1 = inventoryRepository.findAll().getFirst();
-        assertAll( "Inventory contents", () -> assertEquals( 7, inv1.getCoffee() ),
-                () -> assertEquals( 11, inv1.getMilk() ), () -> assertEquals( 12, inv1.getSugar() ),
-                () -> assertEquals( 13, inv1.getChocolate() ) );
+        // Call makeRecipe
+        String result = mvc
+                .perform( post( "/api/makerecipe/{name}", "R1" ).contentType( MediaType.APPLICATION_JSON )
+                        .content( TestUtils.asJsonString( 100 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        Integer change = Integer.valueOf( result );
+        assertEquals( 90, change );
 
-        // Test not enough money
-        mvc.perform( post( "/api/makerecipe/coffee" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( 9 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isConflict() );
+        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+                .getContentAsString();
 
-        final Inventory inv2 = inventoryRepository.findAll().getFirst();
-        assertAll( "Inventory contents", () -> assertEquals( 7, inv2.getCoffee() ),
-                () -> assertEquals( 11, inv2.getMilk() ), () -> assertEquals( 12, inv2.getSugar() ),
-                () -> assertEquals( 13, inv2.getChocolate() ) );
+        // check that the values are correct
+        assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Sugar\",\"amount\":0" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Honey\",\"amount\":3" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Cream\",\"amount\":8" ) );
 
-        // Test not enough ingredients
-        mvc.perform( post( "/api/makerecipe/big_coffee" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( 50 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isBadRequest() );
+        // Call the same recipe without enough change
+        result = mvc
+                .perform( post( "/api/makerecipe/{name}", "R1" ).contentType( MediaType.APPLICATION_JSON )
+                        .content( TestUtils.asJsonString( 9 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isConflict() ).andReturn().getResponse().getContentAsString();
+        change = Integer.valueOf( result );
+        assertEquals( 9, change );
 
-        final Inventory inv3 = inventoryRepository.findAll().getFirst();
-        assertAll( "Inventory contents", () -> assertEquals( 7, inv3.getCoffee() ),
-                () -> assertEquals( 11, inv3.getMilk() ), () -> assertEquals( 12, inv3.getSugar() ),
-                () -> assertEquals( 13, inv3.getChocolate() ) );
+        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+                .getContentAsString();
+
+        // check that the values are correct
+        assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Sugar\",\"amount\":0" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Honey\",\"amount\":3" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Cream\",\"amount\":8" ) );
+
+        // Call the same recipe, now without enough ingredients in inventory
+        result = mvc
+                .perform( post( "/api/makerecipe/{name}", "R1" ).contentType( MediaType.APPLICATION_JSON )
+                        .content( TestUtils.asJsonString( 100 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isBadRequest() ).andReturn().getResponse().getContentAsString();
+        change = Integer.valueOf( result );
+        assertEquals( 100, change );
+
+        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+                .getContentAsString();
+
+        // check that the values are correct
+        assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Sugar\",\"amount\":0" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Honey\",\"amount\":3" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Cream\",\"amount\":8" ) );
+
+        // Call a new recipe with invalid ingredients(water)
+        final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
+        ingredients3.add( recipeIngredient1 );
+        ingredients3.add( recipeIngredient4 );
+        final RecipeDto R3 = new RecipeDto( null, "R3", 30, ingredients3 );
+        // Create the recipe in the system
+        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( R3 ) ).accept( MediaType.APPLICATION_JSON ) );
+        assertEquals( 2, recipeRepository.count() );
+
+        // Call makeRecipe
+        result = mvc
+                .perform( post( "/api/makerecipe/{name}", "R1" ).contentType( MediaType.APPLICATION_JSON )
+                        .content( TestUtils.asJsonString( 100 ) ).accept( MediaType.APPLICATION_JSON ) )
+                .andExpect( status().isBadRequest() ).andReturn().getResponse().getContentAsString();
+        change = Integer.valueOf( result );
+        assertEquals( 100, change );
+
+        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+                .getContentAsString();
+
+        // check that the values are correct
+        assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Sugar\",\"amount\":0" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Honey\",\"amount\":3" ) );
+        assertTrue( ingredientStr.contains( "\"name\":\"Cream\",\"amount\":8" ) );
+
+        recipeRepository.deleteAll();
+        ingredientRepository.deleteAll();
     }
 
 }
