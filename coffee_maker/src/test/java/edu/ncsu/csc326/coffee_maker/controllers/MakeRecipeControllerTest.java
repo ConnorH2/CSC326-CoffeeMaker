@@ -67,24 +67,24 @@ class MakeRecipeControllerTest {
         final IngredientDto ingredient4 = new IngredientDto( "Cream", 10 );
 
         // Add the ingredients
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
                 .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "0" ) )
                 .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3 ) ).accept( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3" ) )
                 .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient4 ) ).accept( MediaType.APPLICATION_JSON ) )
                 .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
                 .andExpect( jsonPath( "$.name" ).value( "Cream" ) );
 
-        String ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn()
+        String ingredientStr = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
                 .getResponse().getContentAsString();
 
         // check that the values are correct
@@ -107,7 +107,7 @@ class MakeRecipeControllerTest {
         final RecipeDto R1 = new RecipeDto( null, "R1", 10, ingredients1 );
 
         // Create the recipe in the system
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( R1 ) ).accept( MediaType.APPLICATION_JSON ) );
         assertEquals( 1, recipeRepository.count() );
 
@@ -119,8 +119,8 @@ class MakeRecipeControllerTest {
         Integer change = Integer.valueOf( result );
         assertEquals( 90, change );
 
-        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
-                .getContentAsString();
+        ingredientStr = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
 
         // check that the values are correct
         assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );
@@ -136,8 +136,8 @@ class MakeRecipeControllerTest {
         change = Integer.valueOf( result );
         assertEquals( 9, change );
 
-        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
-                .getContentAsString();
+        ingredientStr = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
 
         // check that the values are correct
         assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );
@@ -153,8 +153,8 @@ class MakeRecipeControllerTest {
         change = Integer.valueOf( result );
         assertEquals( 100, change );
 
-        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
-                .getContentAsString();
+        ingredientStr = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
 
         // check that the values are correct
         assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );
@@ -167,10 +167,10 @@ class MakeRecipeControllerTest {
         ingredients3.add( recipeIngredient1 );
         ingredients3.add( recipeIngredient4 );
         final RecipeDto R3 = new RecipeDto( null, "R3", 30, ingredients3 );
-        // Create the recipe in the system
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        // Try to create the recipe in the system
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( R3 ) ).accept( MediaType.APPLICATION_JSON ) );
-        assertEquals( 2, recipeRepository.count() );
+        assertEquals( 1, recipeRepository.count() );
 
         // Call makeRecipe
         result = mvc
@@ -180,8 +180,8 @@ class MakeRecipeControllerTest {
         change = Integer.valueOf( result );
         assertEquals( 100, change );
 
-        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
-                .getContentAsString();
+        ingredientStr = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
 
         // check that the values are correct
         assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":2" ) );

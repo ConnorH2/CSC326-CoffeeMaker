@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
 import edu.ncsu.csc326.coffee_maker.dto.RecipeDto;
 import edu.ncsu.csc326.coffee_maker.entity.Recipe;
 import edu.ncsu.csc326.coffee_maker.exception.ResourceNotFoundException;
 import edu.ncsu.csc326.coffee_maker.mapper.RecipeMapper;
 import edu.ncsu.csc326.coffee_maker.repositories.RecipeRepository;
+import edu.ncsu.csc326.coffee_maker.services.IngredientService;
 import edu.ncsu.csc326.coffee_maker.services.RecipeService;
 
 /**
@@ -21,7 +23,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     /** Connection to the repository to work with the DAO + database */
     @Autowired
-    private RecipeRepository recipeRepository;
+    private RecipeRepository  recipeRepository;
+
+    @Autowired
+    private IngredientService ingredientService;
 
     /**
      * Creates a recipe with the given information.
@@ -32,7 +37,16 @@ public class RecipeServiceImpl implements RecipeService {
      */
     @Override
     public RecipeDto createRecipe ( final RecipeDto recipeDto ) {
+        // If the ingredient exists in the inventory already, and add
+        // the id to recipe's ingredient
+        for ( int i = 0; i < recipeDto.getIngredients().size(); i++ ) {
+            final IngredientDto inventoryIngredient = ingredientService
+                    .getIngredientByName( recipeDto.getIngredients().get( i ).getName() );
+            recipeDto.getIngredients().get( i ).setId( inventoryIngredient.getId() );
+        }
+
         final Recipe recipe = RecipeMapper.mapToRecipe( recipeDto );
+
         final Recipe savedRecipe = recipeRepository.save( recipe );
         return RecipeMapper.mapToRecipeDto( savedRecipe );
     }
@@ -111,9 +125,17 @@ public class RecipeServiceImpl implements RecipeService {
      *             if the recipe doesn't exist
      */
     @Override
-    public RecipeDto updateRecipe ( final Long recipeId, final RecipeDto recipeDto ) {
-        final Recipe recipe = recipeRepository.findById( recipeId )
-                .orElseThrow( () -> new ResourceNotFoundException( "Recipe does not exist with id " + recipeId ) );
+    public RecipeDto updateRecipe ( final String recipeName, final RecipeDto recipeDto ) {
+        // If the ingredient exists in the inventory, and add
+        // the id to recipe's ingredient
+        for ( int i = 0; i < recipeDto.getIngredients().size(); i++ ) {
+            final IngredientDto inventoryIngredient = ingredientService
+                    .getIngredientByName( recipeDto.getIngredients().get( i ).getName() );
+            recipeDto.getIngredients().get( i ).setId( inventoryIngredient.getId() );
+        }
+
+        final Recipe recipe = recipeRepository.findByName( recipeName )
+                .orElseThrow( () -> new ResourceNotFoundException( "Recipe does not exist with name " + recipeName ) );
 
         recipe.setName( recipeDto.getName() );
         recipe.setPrice( recipeDto.getPrice() );

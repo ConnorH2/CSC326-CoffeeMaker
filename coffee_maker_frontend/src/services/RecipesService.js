@@ -7,10 +7,10 @@ const REST_API_BASE_URL = "http://localhost:8080/api/recipes"
 export const listRecipes = () => axios.get(REST_API_BASE_URL)
 
 /** POST Recipe - creates a new recipe */
-export const createRecipe = (recipe) => axios.post(REST_API_BASE_URL, recipe)
+export const createRecipe = (recipe) => axios.post("http://localhost:8080/api/add-recipe", recipe)
 
 /** GET Recipe - gets a single recipe by id */
-export const getRecipe = (id) => axios.get(REST_API_BASE_URL + "/" + id)
+export const getRecipe = (name) => axios.get(REST_API_BASE_URL + "/" + name)
 
 /** DELETE Recipe - deletes the recipe with the given id */
 export const deleteRecipe = (id) => axios.delete(REST_API_BASE_URL + "/" + id)

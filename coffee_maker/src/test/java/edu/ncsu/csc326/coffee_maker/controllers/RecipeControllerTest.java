@@ -44,6 +44,7 @@ public class RecipeControllerTest {
     private RecipeRepository     recipeRepository;
 
     /** Reference to ingredient repository */
+    @Autowired
     private IngredientRepository ingredientRepository;
 
     /**
@@ -55,6 +56,7 @@ public class RecipeControllerTest {
     @BeforeEach
     public void setUp () throws Exception {
         recipeRepository.deleteAll();
+        ingredientRepository.deleteAll();
     }
 
     /**
@@ -85,56 +87,32 @@ public class RecipeControllerTest {
     @Test
     @Transactional
     public void testCreateRecipe () throws Exception {
-        // final IngredientDto ingredient1 = new IngredientDto( "Coffee", 10 );
-        // final IngredientDto ingredient2 = new IngredientDto( "Sugar", 10 );
-        // final IngredientDto ingredient3 = new IngredientDto( "Honey", 10 );
-        // final IngredientDto ingredient4 = new IngredientDto( "Cream", 10 );
-        // mvc.perform( post( "/api/ingredients" ).contentType(
-        // MediaType.APPLICATION_JSON )
-        // .content( TestUtils.asJsonString( ingredient1 ) ).accept(
-        // MediaType.APPLICATION_JSON ) )
-        // .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount"
-        // ).value( "10" ) )
-        // .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        // mvc.perform( post( "/api/ingredients" ).contentType(
-        // MediaType.APPLICATION_JSON )
-        // .content( TestUtils.asJsonString( ingredient2 ) ).accept(
-        // MediaType.APPLICATION_JSON ) )
-        // .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount"
-        // ).value( "10" ) )
-        // .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
-        // mvc.perform( post( "/api/ingredients" ).contentType(
-        // MediaType.APPLICATION_JSON )
-        // .content( TestUtils.asJsonString( ingredient3 ) ).accept(
-        // MediaType.APPLICATION_JSON ) )
-        // .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount"
-        // ).value( "10" ) )
-        // .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
-        // mvc.perform( post( "/api/ingredients" ).contentType(
-        // MediaType.APPLICATION_JSON )
-        // .content( TestUtils.asJsonString( ingredient4 ) ).accept(
-        // MediaType.APPLICATION_JSON ) )
-        // .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount"
-        // ).value( "10" ) )
-        // .andExpect( jsonPath( "$.name" ).value( "Cream" ) );
+        final IngredientDto ingredient1 = new IngredientDto( "Coffee", 10 );
+        final IngredientDto ingredient2 = new IngredientDto( "Sugar", 10 );
+        final IngredientDto ingredient3 = new IngredientDto( "Honey", 10 );
+        final IngredientDto ingredient4 = new IngredientDto( "Cream", 10 );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient3 ) ).accept( MediaType.APPLICATION_JSON ) )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( ingredient4 ) ).accept( MediaType.APPLICATION_JSON ) )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Cream" ) );
         final IngredientDto ingredient1a = new IngredientDto( "Coffee", 1 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( ingredient1a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "1" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
         final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
         ingredients1.add( ingredient1a );
 
         final IngredientDto ingredient2a = new IngredientDto( "Coffee", 2 );
         final IngredientDto ingredient2b = new IngredientDto( "Sugar", 1 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( ingredient2a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( ingredient2b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "1" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
         final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
         ingredients2.add( ingredient2a );
         ingredients2.add( ingredient2b );
@@ -142,18 +120,6 @@ public class RecipeControllerTest {
         final IngredientDto ingredient3a = new IngredientDto( "Coffee", 3 );
         final IngredientDto ingredient3b = new IngredientDto( "Sugar", 2 );
         final IngredientDto ingredient3c = new IngredientDto( "Cream", 1 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( ingredient3a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( ingredient3b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( ingredient3c ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "1" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Cream" ) );
         final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
         ingredients3.add( ingredient3a );
         ingredients3.add( ingredient3b );
@@ -176,8 +142,10 @@ public class RecipeControllerTest {
         // add
         assertFalse( recipe.contains( "Mocha" ) );
 
+        assertEquals( 4, ingredientRepository.count() );
+
         // The standard post function
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe1 ) ).accept( MediaType.APPLICATION_JSON ) );
 
         // Now we should update the string to have the recipe
@@ -191,7 +159,7 @@ public class RecipeControllerTest {
         assertTrue( recipe.contains( String.valueOf( recipe1.getIngredients().getFirst().getAmount() ) ) );
 
         // The standard post function
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe2 ) ).accept( MediaType.APPLICATION_JSON ) );
 
         // Now we should update the string to have the recipe, this will have
@@ -213,14 +181,14 @@ public class RecipeControllerTest {
         // an error
         // Lets add hot chocolate again and see what happens, we will change
         // status().isOk to test this
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().is( HttpStatus.CONFLICT.value() ) );
+        .andExpect( status().is( HttpStatus.CONFLICT.value() ) );
 
         // The standard post function
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe3 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
+        .andExpect( status().isOk() );
 
         // Update the string
         recipe = mvc.perform( get( "/api/recipes" ) ).andExpect( status().isOk() ).andReturn().getResponse()
@@ -243,9 +211,9 @@ public class RecipeControllerTest {
         final RecipeDto futureDrink = new RecipeDto( 2L, "badCoffee", 250, ingredients1 );
 
         // The standard post function
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( futureDrink ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().is( HttpStatus.INSUFFICIENT_STORAGE.value() ) );
+        .andExpect( status().is( HttpStatus.INSUFFICIENT_STORAGE.value() ) );
     }
 
     /**
@@ -258,23 +226,23 @@ public class RecipeControllerTest {
     @Transactional
     public void deleteRecipes () throws Exception {
         final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2222" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Milk" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2222" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Milk" ) );
         final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
         ingredients1.add( ingredient1a );
 
         final IngredientDto ingredient2a = new IngredientDto( "Water", 3333 );
         final IngredientDto ingredient2b = new IngredientDto( "Sugar", 4444 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3333" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Water" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3333" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Water" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "4444" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "4444" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
         final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
         ingredients2.add( ingredient2a );
         ingredients2.add( ingredient2b );
@@ -282,18 +250,18 @@ public class RecipeControllerTest {
         final IngredientDto ingredient3a = new IngredientDto( "Cinnamon", 5555 );
         final IngredientDto ingredient3b = new IngredientDto( "Honey", 6666 );
         final IngredientDto ingredient3c = new IngredientDto( "Caramel", 7777 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5555" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Cinnamon" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5555" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Cinnamon" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "6666" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "6666" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3c ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "7777" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Caramel" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "7777" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Caramel" ) );
         final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
         ingredients3.add( ingredient3a );
         ingredients3.add( ingredient3b );
@@ -312,15 +280,15 @@ public class RecipeControllerTest {
         // Prove it starts empty
         assertEquals( recipe, "[]" );
         // We can add all three
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() );
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() );
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe3 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
+        .andExpect( status().isOk() );
 
         // Update the string
         recipe = mvc.perform( get( "/api/recipes" ) ).andExpect( status().isOk() ).andReturn().getResponse()
@@ -416,23 +384,23 @@ public class RecipeControllerTest {
     public void getRecipe () throws Exception {
 
         final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2222" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Milk" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2222" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Milk" ) );
         final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
         ingredients1.add( ingredient1a );
 
         final IngredientDto ingredient2a = new IngredientDto( "Water", 3333 );
         final IngredientDto ingredient2b = new IngredientDto( "Sugar", 4444 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3333" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Water" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3333" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Water" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "4444" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "4444" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
         final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
         ingredients2.add( ingredient2a );
         ingredients2.add( ingredient2b );
@@ -440,18 +408,18 @@ public class RecipeControllerTest {
         final IngredientDto ingredient3a = new IngredientDto( "Cinnamon", 5555 );
         final IngredientDto ingredient3b = new IngredientDto( "Honey", 6666 );
         final IngredientDto ingredient3c = new IngredientDto( "Caramel", 7777 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5555" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Cinnamon" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5555" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Cinnamon" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "6666" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "6666" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3c ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "7777" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Caramel" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "7777" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Caramel" ) );
         final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
         ingredients3.add( ingredient3a );
         ingredients3.add( ingredient3b );
@@ -470,15 +438,15 @@ public class RecipeControllerTest {
         // Prove it starts empty
         assertEquals( recipe, "[]" );
         // We can add all three
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() );
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() );
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe3 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() );
+        .andExpect( status().isOk() );
 
         // Now we will get each one of them separately
         final String recipe1String = mvc.perform( get( "/api/recipes/" + recipe1.getName() ) )
@@ -536,23 +504,23 @@ public class RecipeControllerTest {
     @Transactional
     public void editRecipe () throws Exception {
         final IngredientDto ingredient1a = new IngredientDto( "Milk", 2222 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2222" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Milk" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "2222" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Milk" ) );
         final List<IngredientDto> ingredients1 = new ArrayList<IngredientDto>();
         ingredients1.add( ingredient1a );
 
         final IngredientDto ingredient2a = new IngredientDto( "Water", 3333 );
         final IngredientDto ingredient2b = new IngredientDto( "Sugar", 4444 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3333" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Water" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3333" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Water" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "4444" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "4444" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
         final List<IngredientDto> ingredients2 = new ArrayList<IngredientDto>();
         ingredients2.add( ingredient2a );
         ingredients2.add( ingredient2b );
@@ -560,18 +528,18 @@ public class RecipeControllerTest {
         final IngredientDto ingredient3a = new IngredientDto( "Cinnamon", 5555 );
         final IngredientDto ingredient3b = new IngredientDto( "Honey", 6666 );
         final IngredientDto ingredient3c = new IngredientDto( "Caramel", 7777 );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3a ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5555" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Cinnamon" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5555" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Cinnamon" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3b ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "6666" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "6666" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3c ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "7777" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Caramel" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "7777" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Caramel" ) );
         final List<IngredientDto> ingredients3 = new ArrayList<IngredientDto>();
         ingredients3.add( ingredient3a );
         ingredients3.add( ingredient3b );
@@ -594,7 +562,7 @@ public class RecipeControllerTest {
                 .getContentAsString();
 
         // The standard post function
-        mvc.perform( post( "/api/recipes" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-recipe" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe1 ) ).accept( MediaType.APPLICATION_JSON ) );
 
         // Now we should update the string to have the recipe
@@ -620,7 +588,7 @@ public class RecipeControllerTest {
         recipe1.setPrice( 100 );
         recipe1.setIngredients( ingredients2 );
         recipe1.setId( Long.valueOf( ids[0] ) );
-        mvc.perform( put( "/api/recipes/{id}", ids[0] ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( put( "/api/edit-recipe/{id}", ids[0] ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( recipe1 ) ).accept( MediaType.APPLICATION_JSON ) );
 
         recipe = mvc.perform( get( "/api/recipes" ) ).andExpect( status().isOk() ).andReturn().getResponse()
