@@ -159,7 +159,7 @@ const RecipeComponent = () => {
             <br /><br />
             <div className="row">
                 <div className={"custom-card col-md-6 offset-md-3"}>
-                    <h2 className="text-center">Add Recipe</h2>
+                    <h2 className="custom-title-text">Add Recipe</h2>
 
                     <div className="card-body">
                         { getGeneralErrors() }
@@ -172,7 +172,7 @@ const RecipeComponent = () => {
                                     placeholder="Enter Recipe Name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className={`form-control ${errors.name ? "is-invalid":""}`}
+                                    className={`custom-form-control ${errors.name ? "is-invalid":""}`}
                                 >
                                 </input>
                                 {errors.name && <div className="invalid-feedback">{errors.name}</div>}
@@ -186,7 +186,7 @@ const RecipeComponent = () => {
                                     placeholder="Enter Recipe Price (as an integer)"
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value)}
-                                    className={`form-control ${errors.price ? "is-invalid":""}`}
+                                    className={`custom-form-control ${errors.price ? "is-invalid":""}`}
 								>
 								</input>
 								{errors.price && <div className="invalid-feedback">{errors.price}</div>}
@@ -212,7 +212,7 @@ const RecipeComponent = () => {
 													placeholder={`Enter amount for ${ingredient.name}`}
 													value={selectedIngredients[ingredient.id]?.amount || ""}
 													onChange={(e) => updateIngredientAmount(ingredient.id, ingredient.name, e.target.value)}
-													className="form-control me-2"
+													className="custom-form-control me-2"
 												/>
 												<button
 													type="button"
