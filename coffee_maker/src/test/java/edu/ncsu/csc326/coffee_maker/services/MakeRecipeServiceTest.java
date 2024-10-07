@@ -5,6 +5,7 @@ package edu.ncsu.csc326.coffee_maker.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
 import edu.ncsu.csc326.coffee_maker.dto.RecipeDto;
+import edu.ncsu.csc326.coffee_maker.exception.ResourceNotFoundException;
 import edu.ncsu.csc326.coffee_maker.repositories.IngredientRepository;
 import edu.ncsu.csc326.coffee_maker.repositories.RecipeRepository;
 
@@ -125,7 +127,7 @@ class MakeRecipeServiceTest {
         ingredients3.add( recipeIngredient1 );
         ingredients3.add( recipeIngredient4 );
         final RecipeDto R3 = new RecipeDto( null, "R3", 30, ingredients3 );
-        recipeService.createRecipe( R3 );
+        assertThrows( ResourceNotFoundException.class, () -> recipeService.createRecipe( R3 ) );
 
         assertFalse( makeRecipeService.makeRecipe( R3 ) );
 

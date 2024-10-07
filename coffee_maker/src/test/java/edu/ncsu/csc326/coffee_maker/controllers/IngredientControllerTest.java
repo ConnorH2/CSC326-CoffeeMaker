@@ -55,10 +55,10 @@ public class IngredientControllerTest {
     void testCreateIngredient () throws Exception {
         final IngredientDto ingredient1 = new IngredientDto( "Coffee", 5 );
 
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
     }
 
     @Test
@@ -67,24 +67,24 @@ public class IngredientControllerTest {
         final IngredientDto ingredient1 = new IngredientDto( "Coffee", 5 );
         final IngredientDto ingredient2 = new IngredientDto( "Sweet Tea", 5 );
 
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
 
-        String ingredients = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn()
+        String ingredients = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
                 .getResponse().getContentAsString();
 
         // Check that it has the coffee but not the sweet tea
         assertTrue( ingredients.contains( "Coffee" ) );
         assertFalse( ingredients.contains( "Sweet Tea" ) );
 
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
 
-        ingredients = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+        ingredients = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn().getResponse()
                 .getContentAsString();
 
         // Check that we got both
@@ -99,14 +99,14 @@ public class IngredientControllerTest {
         final IngredientDto ingredient2 = new IngredientDto( "Sweet Tea", 5 );
 
         // Add both the ingredients
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
 
         String ingredients = mvc
                 .perform( get( "/api/ingredients/name/{name}", "Coffee" ).contentType( MediaType.APPLICATION_JSON )
@@ -134,17 +134,17 @@ public class IngredientControllerTest {
         final IngredientDto ingredient2 = new IngredientDto( "Sweet Tea", 5 );
 
         // Add both the ingredients
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
 
-        final String i = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
-                .getContentAsString();
+        final String i = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
 
         // Now that they are all added I can do some magic to get the ids
         final String[] ids = new String[3];
@@ -188,20 +188,20 @@ public class IngredientControllerTest {
         final IngredientDto ingredient3 = new IngredientDto( "Water", 5 );
 
         // Add both the ingredients
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Water" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Water" ) );
 
-        String i = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+        String i = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn().getResponse()
                 .getContentAsString();
 
         // Now that they are all added I can do some magic to get the ids
@@ -224,7 +224,7 @@ public class IngredientControllerTest {
 
         assertEquals( successMessage, "Ingredient successfully deleted" );
 
-        i = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+        i = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn().getResponse()
                 .getContentAsString();
 
         // Check that the ingredient retrieved was coffee not sweet tea
@@ -240,7 +240,7 @@ public class IngredientControllerTest {
 
         assertEquals( successMessage, "All ingredients successfully deleted" );
 
-        i = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+        i = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn().getResponse()
                 .getContentAsString();
 
         // Check that the ingredient retrieved was coffee not sweet tea
@@ -258,16 +258,16 @@ public class IngredientControllerTest {
         final IngredientDto ingredient3 = new IngredientDto( "Water", 5 );
 
         // Add both the ingredients
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sweet Tea" ) );
 
-        String i = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+        String i = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn().getResponse()
                 .getContentAsString();
 
         // Now that they are all added I can do some magic to get the ids
@@ -291,10 +291,10 @@ public class IngredientControllerTest {
         // Switch Tea to water by using tea's id and water's info
         mvc.perform( put( "/api/ingredients/{id}", ids[1] ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
 
         // Check the new list of ingredients
-        i = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
+        i = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn().getResponse()
                 .getContentAsString();
 
         // Check that the ingredient retrieved was coffee not sweet tea
@@ -313,24 +313,24 @@ public class IngredientControllerTest {
         final IngredientDto ingredient4 = new IngredientDto( "Cream", 10 );
 
         // Add the ingredients
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient1 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "5" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Coffee" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient2 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "0" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "0" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Sugar" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient3 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
-        mvc.perform( post( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "3" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Honey" ) );
+        mvc.perform( post( "/api/add-ingredient" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( ingredient4 ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
-                .andExpect( jsonPath( "$.name" ).value( "Cream" ) );
+        .andExpect( status().isOk() ).andExpect( jsonPath( "$.amount" ).value( "10" ) )
+        .andExpect( jsonPath( "$.name" ).value( "Cream" ) );
 
-        String ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn()
+        String ingredientStr = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
                 .getResponse().getContentAsString();
 
         // check that the values are correct
@@ -349,10 +349,10 @@ public class IngredientControllerTest {
 
         mvc.perform( put( "/api/ingredients" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( desiredChanges ) ).accept( MediaType.APPLICATION_JSON ) )
-                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
 
-        ingredientStr = mvc.perform( get( "/api/ingredients" ) ).andExpect( status().isOk() ).andReturn().getResponse()
-                .getContentAsString();
+        ingredientStr = mvc.perform( get( "/api/add-ingredient" ) ).andExpect( status().isOk() ).andReturn()
+                .getResponse().getContentAsString();
 
         // check that the values are correct
         assertTrue( ingredientStr.contains( "\"name\":\"Coffee\",\"amount\":22" ) );

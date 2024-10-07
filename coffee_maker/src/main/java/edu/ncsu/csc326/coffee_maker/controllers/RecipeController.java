@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc326.coffee_maker.dto.RecipeDto;
@@ -23,7 +22,6 @@ import edu.ncsu.csc326.coffee_maker.services.RecipeService;
  */
 @CrossOrigin ( "*" )
 @RestController
-@RequestMapping ( "/api/recipes" )
 public class RecipeController {
 
     /** Connection to RecipeService */
@@ -35,7 +33,7 @@ public class RecipeController {
      *
      * @return JSON representation of all recipes
      */
-    @GetMapping
+    @GetMapping ( "/api/recipes" )
     public List<RecipeDto> getRecipes () {
         return recipeService.getAllRecipes();
     }
@@ -48,7 +46,7 @@ public class RecipeController {
      *            recipe name
      * @return response to the request
      */
-    @GetMapping ( "{name}" )
+    @GetMapping ( "/api/recipes/{name}" )
     public ResponseEntity<RecipeDto> getRecipe ( @PathVariable ( "name" ) final String name ) {
         final RecipeDto recipeDto = recipeService.getRecipeByName( name );
         return ResponseEntity.ok( recipeDto );
@@ -62,7 +60,7 @@ public class RecipeController {
      * @return ResponseEntity indicating success if the Recipe could be saved to
      *         the inventory, or an error if it could not be
      */
-    @PostMapping
+    @PostMapping ( "/api/add-recipe" )
     public ResponseEntity<RecipeDto> createRecipe ( @RequestBody final RecipeDto recipeDto ) {
         if ( recipeService.isDuplicateName( recipeDto.getName() ) ) {
             return new ResponseEntity<>( recipeDto, HttpStatus.CONFLICT );
@@ -87,16 +85,18 @@ public class RecipeController {
      *            recipe name
      * @return response to the request
      */
-    @PutMapping ( "{id}" )
-    public ResponseEntity<RecipeDto> editRecipe ( @RequestBody final RecipeDto recipeDto ) {
+    @PutMapping ( "/api/edit-recipe/{name}" )
+    public ResponseEntity<RecipeDto> updateRecipe ( @PathVariable ( "name" ) final String name,
+            @RequestBody final RecipeDto recipeDto ) {
         if ( recipeDto.getIngredients().size() == 0 ) {
             return new ResponseEntity<>( recipeDto, HttpStatus.CONFLICT );
         }
-        if ( recipeService.getAllRecipes().size() >= 3 ) {
-            return new ResponseEntity<>( recipeDto, HttpStatus.INSUFFICIENT_STORAGE );
-        }
         else {
-            final RecipeDto savedRecipeDto = recipeService.updateRecipe( recipeDto.getId(), recipeDto );
+            // recipeService.getRecipeByName( recipeDto.getName() ).setPrice(
+            // recipeDto.getPrice() );
+            // recipeService.getRecipeByName( recipeDto.getName()
+            // ).setIngredients( recipeDto.getIngredients() );
+            final RecipeDto savedRecipeDto = recipeService.updateRecipe( recipeDto.getName(), recipeDto );
             return ResponseEntity.ok( savedRecipeDto );
         }
     }
@@ -111,7 +111,7 @@ public class RecipeController {
      * @return Success if the recipe could be deleted; an error if the recipe
      *         does not exist
      */
-    @DeleteMapping ( "{id}" )
+    @DeleteMapping ( "/api/recipes/{id}" )
     public ResponseEntity<String> deleteRecipe ( @PathVariable ( "id" ) final Long recipeId ) {
         recipeService.deleteRecipe( recipeId );
         return ResponseEntity.ok( "Recipe deleted successfully." );

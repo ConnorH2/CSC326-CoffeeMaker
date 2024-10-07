@@ -3,24 +3,24 @@ import { NavLink } from 'react-router-dom'
 /** Code for the Header of the webpage. */
 const HeaderComponent = () => {
   return (
-    <div>
+    <div className="px-5">
         <header>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-                <a className="navbar-brand" href="http://localhost:3000">Coffee Maker</a>
+                <a className="custom-navbar-brand" href="http://localhost:3000">Coffee Maker</a>
                 <div className="collapse navbar-collapse" id="navbarNav">
                   <ul className="navbar-nav">
-                    <li className="nav-item">
-                      <NavLink className="nav-link" to="/inventory">Inventory</NavLink>
-                    </li>
-                    <li className="nav-item">
-                      <NavLink className="nav-link" to="/recipes">Recipes</NavLink>
-                    </li>
-                    <li className="nav-item">
-                      <NavLink className="nav-link" to="/make-recipe">Make Recipe</NavLink>
-                    </li>
-					<li className="nav-item">
+					<li className="custom-nav-item">
+	                  <NavLink className="nav-link" to="/recipes">Recipes</NavLink>
+	                </li>
+					<li className="custom-nav-item">
+					  <NavLink className="nav-link" to="/inventory">Inventory</NavLink>
+					</li>
+					<li className="custom-nav-item">
+					  <NavLink className="nav-link" to="/make-recipe">Order Beverage</NavLink>
+					</li>
+					<li className="custom-nav-item">
 					  <NavLink className="nav-link" to="/add-ingredient">Add Ingredient</NavLink>
-				    </li>
+					</li>
                   </ul>
                 </div>
             </nav>
