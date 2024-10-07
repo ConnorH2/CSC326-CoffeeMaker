@@ -26,7 +26,7 @@ const ListRecipesComponent = () => {
     }
 
     function craftRecipe(name, amtPaid) {
-		e.preventDefault()
+		//e.preventDefault()
         console.log(name, amtPaid)
 
 		if (validateForm()) {
@@ -52,8 +52,9 @@ const ListRecipesComponent = () => {
         let valid = true
         const errorsCopy = {... errors}
 
-        if (amtPaid < 0) {
+        if (isNaN(amtPaid) || amtPaid <= 0) {
             errorsCopy.general = "Amount paid must be a positive integer."
+			valid = false
         }
 
         setErrors(errorsCopy)
@@ -67,51 +68,61 @@ const ListRecipesComponent = () => {
     }
 
     return (
-        <div className="container">
-            <h2 className="text-center">List of Recipes</h2>
-            { getGeneralErrors() }
-            <br /><br />
-            <div className="card-body">
-                <form>
-                    <div className="form-group mb-2">
-                        <label className="form-label">Amount Paid</label>
-                        <input
-                            type="text"
-                            name="amtPaid"
-                            placeholder="How much are you paying?"
-                            value={amtPaid}
-                            onChange={(e) => setAmtPaid(e.target.value)}
-                            className={`form-control ${errors.general ? "is-invalid":""}`}
-                        >
-                        </input>
-                        <label className="form-label">Change: {change}</label>
+        <div className='custom-container py-5'>
+			<div className='custom-card col-md-8 offset-md-2'>
+	            <h2 className="custom-title-text">List of Recipes</h2>
+	            { getGeneralErrors() }
+	            <br />
+	            <div className="card-body">
+	                <form>
+	                    <div className="form-group mb-2">
+	                        <label className="form-label">Amount Paid</label>
+	                        <input
+	                            type="text"
+	                            name="amtPaid"
+	                            placeholder="How much are you paying?"
+	                            value={amtPaid}
+	                            onChange={(e) => setAmtPaid(e.target.value)}
+	                            className={`custom-form-control ${errors.general ? "is-invalid":""}`}
+	                        >
+	                        </input>
+	                        <label className="form-label">Change</label>
+							<input
+						        type="text"
+						        className="custom-form-control"
+						        placeholder="Change returned from making recipe"
+						        name='change'
+						        value={change}
+						        disabled
+						    />
                     </div>
-                </form>
-            </div>
-
-            <table className="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Recipe Name</th>
-                        <th>Recipe Price</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        recipes.map(recipe => 
-                        <tr key={recipe.id}>
-                            <td>{recipe.name}</td>
-                            <td>{recipe.price}</td>
-                            <td>
-                                <button className="btn btn-primary" onClick={() => craftRecipe(recipe.name, amtPaid)}
-                                    style={{marginLeft: '10px'}}
-                                >Make Recipe</button>
-                            </td>
-                        </tr>)
-                    }
-                </tbody>
-            </table>
+	                </form>
+	            </div>
+	
+	            <table className="table table-striped table-bordered">
+	                <thead>
+	                    <tr>
+	                        <th>Recipe Name</th>
+	                        <th>Recipe Price</th>
+	                        <th>Actions</th>
+	                    </tr>
+	                </thead>
+	                <tbody>
+	                    {
+	                        recipes.map(recipe => 
+	                        <tr key={recipe.id}>
+	                            <td>{recipe.name}</td>
+	                            <td>{recipe.price}</td>
+	                            <td>
+	                                <button className="custom-update-button" onClick={() => craftRecipe(recipe.name, amtPaid)}
+	                                    style={{marginLeft: '10px'}}
+	                                >Make Recipe</button>
+	                            </td>
+	                        </tr>)
+	                    }
+	                </tbody>
+	            </table>
+			</div>
         </div>
     )
 

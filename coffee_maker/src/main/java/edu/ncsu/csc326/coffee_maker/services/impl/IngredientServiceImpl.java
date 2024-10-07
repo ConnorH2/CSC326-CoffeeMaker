@@ -37,6 +37,10 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public List<IngredientDto> getAllIngredients () {
         final List<Ingredient> ingredients = ingredientRepository.findAll();
+        if ( ingredients.size() == 0 ) {
+            // Have to return an empty list instead of null to fix the front end error.
+            return new ArrayList<>();
+        }
         return ingredients.stream().map( ( ingredient ) -> IngredientMapper.mapToIngredientDto( ingredient ) )
                 .collect( Collectors.toList() );
     }

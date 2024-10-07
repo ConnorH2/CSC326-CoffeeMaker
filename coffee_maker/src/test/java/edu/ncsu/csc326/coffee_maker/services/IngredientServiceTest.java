@@ -91,7 +91,7 @@ public class IngredientServiceTest {
         List<IngredientDto> allIngredients = ingredientService.getAllIngredients();
 
         // At the start there are no ingredients
-        assertEquals( allIngredients.size(), 0 );
+        assertEquals( allIngredients, new ArrayList<>() );
 
         final IngredientDto ingredient1 = new IngredientDto( "Coffee", 5 );
         ingredientService.createIngredient( ingredient1 );

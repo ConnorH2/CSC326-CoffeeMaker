@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc326.coffee_maker.dto.IngredientDto;
@@ -23,7 +22,7 @@ import edu.ncsu.csc326.coffee_maker.services.IngredientService;
  */
 @CrossOrigin ( "*" )
 @RestController
-@RequestMapping ( "/api/ingredients" )
+// @RequestMapping ( "/api/ingredients" )
 public class IngredientController {
 
     /** The service that lets us interact with ingredientRepository */
@@ -37,7 +36,7 @@ public class IngredientController {
      *            the ID of the ingredient to retrieve
      * @return ResponseEntity containing the IngredientDto if found
      */
-    @GetMapping ( "{id}" )
+    @GetMapping ( "/api/ingredients/{id}" )
     public ResponseEntity<IngredientDto> getIngredient ( @PathVariable ( "id" ) final Long id ) {
         final IngredientDto ingredientDto = ingredientService.getIngredientById( id );
         return ResponseEntity.ok( ingredientDto );
@@ -50,7 +49,7 @@ public class IngredientController {
      *            the name of the ingredient to retrieve
      * @return ResponseEntity containing the IngredientDto if found
      */
-    @GetMapping ( "/name/{name}" )
+    @GetMapping ( "/api/ingredients/name/{name}" )
     public ResponseEntity<IngredientDto> getIngredientByName ( @PathVariable ( "name" ) final String name ) {
         final IngredientDto ingredientDto = ingredientService.getIngredientByName( name );
         return ResponseEntity.ok( ingredientDto );
@@ -61,7 +60,7 @@ public class IngredientController {
      *
      * @return ResponseEntity containing the list of all IngredientDto objects
      */
-    @GetMapping
+    @GetMapping ( "/api/add-ingredient" )
     public List<IngredientDto> getAllIngredients () {
         return ingredientService.getAllIngredients();
     }
@@ -73,7 +72,7 @@ public class IngredientController {
      *            the ID of the ingredient to delete
      * @return ResponseEntity with a success message
      */
-    @DeleteMapping ( "{id}" )
+    @DeleteMapping ( "/api/ingredients/{id}" )
     public ResponseEntity<String> deleteIngredient ( @PathVariable ( "id" ) final Long id ) {
         ingredientService.deleteIngredient( id );
         return ResponseEntity.ok( "Ingredient successfully deleted" );
@@ -84,7 +83,7 @@ public class IngredientController {
      *
      * @return ResponseEntity with a success message
      */
-    @DeleteMapping
+    @DeleteMapping ( "/api/ingredients" )
     public ResponseEntity<String> deleteAll () {
         ingredientService.deleteAllIngredients();
         return ResponseEntity.ok( "All ingredients successfully deleted" );
@@ -97,7 +96,7 @@ public class IngredientController {
      *            the data transfer object containing ingredient details
      * @return ResponseEntity containing the created IngredientDto
      */
-    @PostMapping
+    @PostMapping ( "/api/add-ingredient" )
     public ResponseEntity<IngredientDto> createIngredient ( @RequestBody final IngredientDto ingredientDto ) {
         final IngredientDto savedIngredientDto = ingredientService.createIngredient( ingredientDto );
         return ResponseEntity.ok( savedIngredientDto );
@@ -112,7 +111,7 @@ public class IngredientController {
      *            the IngredientDto containing updated information
      * @return ResponseEntity containing the updated IngredientDto
      */
-    @PutMapping ( "{id}" )
+    @PutMapping ( "/api/ingredients/{id}" )
     public ResponseEntity<IngredientDto> updateIngredient ( @PathVariable ( "id" ) final Long id,
             @RequestBody final IngredientDto ingredientDto ) {
         final IngredientDto updatedIngredientDto = ingredientService.updateIngredient( id, ingredientDto );
@@ -126,7 +125,7 @@ public class IngredientController {
      *            all ingredients in the system
      * @return response to the request
      */
-    @PutMapping
+    @PutMapping ( "/api/ingredients" )
     public List<IngredientDto> updateAllIngredients ( @RequestBody final List<IngredientDto> ingredientList ) {
         // If this doesn't work check
         // https://stackoverflow.com/questions/35266289/how-to-get-list-of-objects-via-requestbody-in-spring-boot-api
